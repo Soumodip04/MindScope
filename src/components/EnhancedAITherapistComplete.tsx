@@ -6,6 +6,8 @@ import EnhancedTherapeuticProtocolEngine, {
     type TherapeuticApproach,
     type TherapeuticTechnique
 } from '@/lib/enhancedTherapeuticProtocolEngine';
+import { SupportedLanguage } from '@/lib/languageConfig';
+import { getTranslation } from '@/lib/translations';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     Bot,
@@ -45,9 +47,10 @@ interface Message {
 
 interface EnhancedAITherapistProps {
   isDarkMode?: boolean;
+  language?: SupportedLanguage;
 }
 
-export default function EnhancedAITherapist({ isDarkMode = false }: EnhancedAITherapistProps) {
+export default function EnhancedAITherapist({ isDarkMode = false, language = 'en' }: EnhancedAITherapistProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversationHistory, setConversationHistory] = useState<TherapistMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -65,6 +68,7 @@ export default function EnhancedAITherapist({ isDarkMode = false }: EnhancedAITh
   const [currentEmotions, setCurrentEmotions] = useState<EmotionCategory[]>([]);
   const [emotionalIntensity, setEmotionalIntensity] = useState(5);
   const [preferredApproaches, setPreferredApproaches] = useState<TherapeuticApproach[]>(['CBT', 'mindfulness']);
+  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>(language);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -73,6 +77,9 @@ export default function EnhancedAITherapist({ isDarkMode = false }: EnhancedAITh
 
   // Initialize speech recognition and synthesis
   useEffect(() => {
+    // Reset AI therapist state when component mounts to ensure fresh session
+    aiTherapistService.resetState();
+    
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
@@ -210,20 +217,32 @@ export default function EnhancedAITherapist({ isDarkMode = false }: EnhancedAITh
 
   const generateTherapistResponse = async (userMessage: string): Promise<Message> => {
     try {
-      // Detect emotions from the message
-      const detectedEmotions = detectEmotionFromMessage(userMessage);
+      // Generate AI response using the service first to get proper emotion detection
+      const response = await aiTherapistService.generateResponse(userMessage, conversationHistory, selectedLanguage);
+      
+      // Convert AI emotion to EmotionCategory type and use for consistency
+      const aiEmotion = response.emotion || 'general';
+      const mappedEmotion = aiEmotion === 'general' ? 'anxiety' : 
+                          aiEmotion === 'happiness' ? 'self_esteem' :
+                          aiEmotion === 'confusion' ? 'anxiety' :
+                          aiEmotion === 'loneliness' ? 'depression' :
+                          aiEmotion === 'excitement' ? 'self_esteem' :
+                          aiEmotion === 'overwhelmed' ? 'stress' :
+                          aiEmotion === 'guilt' ? 'depression' :
+                          aiEmotion === 'fear' ? 'anxiety' :
+                          aiEmotion === 'mixed' ? 'anxiety' :
+                          aiEmotion as EmotionCategory;
+      
+      const detectedEmotions: EmotionCategory[] = [mappedEmotion];
       setCurrentEmotions(detectedEmotions);
 
-      // Get therapeutic technique recommendations
+      // Get therapeutic technique recommendations based on AI-detected emotions
       const recommendedTechniques = protocolEngine.current.getRecommendedTechniques(
         detectedEmotions,
         emotionalIntensity,
         15, // 15 minutes available
         preferredApproaches
       );
-
-      // Generate AI response using the service
-      const response = await aiTherapistService.generateResponse(userMessage, conversationHistory);
       
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -464,6 +483,35 @@ export default function EnhancedAITherapist({ isDarkMode = false }: EnhancedAITh
             </div>
             
             <div className="flex items-center space-x-2">
+              {/* Language Selector */}
+              <select
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value as SupportedLanguage)}
+                className={`px-2 py-1 text-xs rounded-md border ${
+                  isDarkMode
+                    ? 'bg-gray-700 border-gray-600 text-gray-300'
+                    : 'bg-white border-gray-300 text-gray-700'
+                }`}
+              >
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="ta">தமிழ்</option>
+                <option value="te">తెలుగు</option>
+                <option value="bn">বাংলা</option>
+                <option value="mr">मराठी</option>
+                <option value="gu">ગુજરાતી</option>
+                <option value="pa">ਪੰਜਾਬੀ</option>
+                <option value="ml">മലയാളം</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="zh">中文</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="ar">العربية</option>
+              </select>
+              
               <button
                 onClick={() => setShowTechniques(!showTechniques)}
                 className={`p-2 rounded-lg transition-colors ${
@@ -563,7 +611,7 @@ export default function EnhancedAITherapist({ isDarkMode = false }: EnhancedAITh
                           if (line.includes('🚨') && (line.includes('IMMEDIATE') || line.includes('CRISIS'))) {
                             return (
                               <div key={index} className="font-bold text-yellow-200 text-base mb-3 border-b border-red-300 pb-1">
-                                {line}
+                                {line.replace(/\*\*/g, '')}
                               </div>
                             );
                           }
@@ -586,7 +634,16 @@ export default function EnhancedAITherapist({ isDarkMode = false }: EnhancedAITh
                             );
                           }
                           
-                          // Bullet points
+                          // Bullet points with ** formatting - remove ** but keep content
+                          if (line.startsWith('•') && line.includes('**')) {
+                            return (
+                              <div key={index} className="ml-2 mb-1 text-red-100">
+                                {line.replace(/\*\*/g, '')}
+                              </div>
+                            );
+                          }
+                          
+                          // Regular bullet points
                           if (line.startsWith('•')) {
                             return (
                               <div key={index} className="ml-2 mb-1 text-red-100">
