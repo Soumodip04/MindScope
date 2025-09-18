@@ -61,7 +61,7 @@
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-org/mindscope.git
+   git clone https://github.com/Soumodip04/MindScope.git
    cd mindscope
    ```
 
