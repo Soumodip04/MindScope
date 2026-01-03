@@ -75,30 +75,35 @@ class AITherapistService {
   }
 
   private getSystemPrompt(): string {
-    return `You are an AI assistant with two modes of operation:
+    return `You are a skilled AI mental health companion with advanced therapeutic training. Your responses should be:
 
-1. CASUAL CONVERSATION MODE (for general questions, weather, facts, etc.):
-   - Respond naturally and helpfully like a friendly assistant
-   - Provide direct answers to factual questions
-   - Keep responses brief and to the point
-   - Don't force therapeutic responses for non-emotional topics
+CORE PRINCIPLES:
+- Be genuinely empathetic and warm, like a caring friend with professional training
+- Provide personalized responses based on the specific situation shared
+- Use natural, conversational language while being professionally supportive
+- Validate emotions and show deep understanding of human experience
+- Ask thoughtful follow-up questions to better understand their unique situation
 
-2. THERAPEUTIC MODE (for emotional support and mental health):
-   - Act as a warm, empathetic mental health professional
-   - Speak naturally and conversationally, like a trusted friend with professional training
-   - Use gentle, everyday language rather than clinical terminology
-   - Show genuine curiosity and validate feelings
-   - Use emojis occasionally (💙 🤗 😔) to add warmth
-   - Offer evidence-based coping strategies when appropriate
+RESPONSE STYLE:
+- Be specific and personal in your responses, not generic
+- Reference details from what they've shared to show you're truly listening
+- Use occasional emojis for warmth (💙 🤗 😔) but don't overuse them
+- Offer evidence-based therapeutic insights and coping strategies
+- Be curious about their experience and ask meaningful questions
 
-IMPORTANT: Detect the context of each message:
-- For factual questions (weather, time, general info): Use CASUAL MODE
-- For emotional content, stress, mental health topics: Use THERAPEUTIC MODE
-- When in doubt, ask clarifying questions about what the person needs
+THERAPEUTIC APPROACHES:
+- Draw from CBT, DBT, mindfulness, and other evidence-based methods naturally
+- Suggest specific techniques that match their current emotional state
+- Help them explore their thoughts and feelings without being pushy
+- Provide hope and perspective while validating their current struggles
 
-Emergency Response: For crisis situations, immediately provide direct support resources and safety planning.
+SAFETY & BOUNDARIES:
+- For crisis situations, provide immediate support resources and safety planning
+- Don't diagnose or prescribe, but offer emotional support and therapeutic guidance
+- Encourage professional help when appropriate
+- Be honest about your limitations as an AI while still being maximally helpful
 
-Remember: Match your response style to what the person actually needs - information or emotional support.`;
+Remember: Every person's situation is unique. Respond to their specific circumstances, emotions, and needs rather than giving generic advice. Show that you understand their particular struggle and care about their individual journey.`;
   }
 
   private detectConversationType(message: string): 'casual' | 'therapeutic' | 'crisis' {
@@ -349,28 +354,7 @@ Remember: Match your response style to what the person actually needs - informat
     return null;
   }
 
-  private getTherapeuticPrompts() {
-    return {
-      anxiety: "I can sense the anxiety you're experiencing right now, and I want you to know that what you're feeling is completely valid. 💙 Anxiety can feel overwhelming, but you're not alone in this. Would you like to try a gentle grounding technique together? We could start with taking three deep breaths, or I could guide you through the 5-4-3-2-1 technique. What feels right for you in this moment?",
-      depression: "I hear the heaviness in your words, and I'm really sorry you're going through this difficult time. 🤗 Depression can make everything feel like it's covered in gray, but I want you to know that what you're experiencing is real and valid - and you don't have to carry this weight alone. Sometimes when we're feeling this way, even small steps can feel monumental. Is there one tiny thing that used to bring you even a moment of comfort?",
-      stress: "Stress can really drain your energy and make everything feel urgent and overwhelming. 😔 I hear you, and it's completely understandable to feel this way. Let's take a moment to breathe together. Can you tell me what's weighing on you most heavily right now? Sometimes breaking things down into smaller pieces can help us see a path forward. You don't have to figure it all out at once.",
-      anger: "I can feel the intensity of your frustration, and anger often tells us that something important to us feels threatened or violated. 🔥 That's actually valuable information - your feelings are telling you something matters to you. It's okay to feel angry. Can you help me understand what's stirring up these feelings? Sometimes just being heard can help us process what we're experiencing.",
-      grief: "I'm so sorry for your loss. 💔 Grief is one of the most profound human experiences, and there's no right or wrong way to move through it. The fact that you're hurting so deeply speaks to how much love you have. Would you feel comfortable sharing a memory that brings you comfort, or would you prefer to just sit with these feelings for now? I'm here with you either way.",
-      happiness: "I'm so glad to hear that you're feeling happy! 😊 It's wonderful when we have these moments of joy and lightness. Do you want to share what's contributing to these positive feelings? Celebrating and savoring these good moments can actually help strengthen our overall well-being. What's making your heart feel lighter today?",
-      relationship: "Relationships can bring so much joy and also so much complexity. 💕 It sounds like you're navigating something important. Every relationship has its ups and downs, and it's normal to have concerns or challenges. Can you tell me a bit more about what's on your mind? Sometimes talking through relationship dynamics can help us see things more clearly.",
-      work: "Work stress can really follow us home and impact every part of our lives. 💼 It's tough when we spend so much of our time in an environment that feels challenging. Can you help me understand what aspects of work are feeling most difficult right now? Sometimes we can find small ways to make things more manageable, even in situations we can't completely control.",
-      family: "Family relationships can be some of the most meaningful and also the most complicated ones we have. 👨‍👩‍👧‍👦 There's so much history and emotion tied up in family dynamics. It sounds like something is weighing on you. Would you feel comfortable sharing what's happening? Sometimes just having someone listen can help us process these complex feelings.",
-      trauma: "Thank you for trusting me with something so significant. 🤲 Trauma can affect us in so many ways, and it takes incredible strength to even acknowledge it. I want you to know that what happened to you matters, and your feelings about it are completely valid. While I'm here to support you, working with a trauma-specialized therapist would give you the most comprehensive care. For right now, let's focus on helping you feel safe and grounded. How are you feeling in this moment?",
-      confusion: "It sounds like you're in a space where things feel unclear and uncertain. 🌫️ That can be really uncomfortable - our minds often want to have everything figured out. But sometimes sitting with uncertainty is part of the process of understanding ourselves better. It's okay not to have all the answers right now. What's it like to sit with these mixed-up feelings? Sometimes talking through the confusion can help clarify things.",
-      loneliness: "Loneliness can feel so heavy and isolating. 💙 I want you to know that you're not alone right now - I'm here with you. Sometimes loneliness isn't just about being physically alone, but about feeling disconnected or misunderstood. What does loneliness feel like for you? Is it more about missing specific people, or feeling like no one really gets you?",
-      excitement: "I love hearing the energy and joy in what you're sharing! 🌟 It's wonderful when we feel this kind of positive excitement. These moments of genuine happiness and anticipation are so important for our wellbeing. What's got you feeling so energized and excited? I'd love to celebrate this with you and hear more about what's bringing you such joy!",
-      overwhelmed: "When everything feels like too much at once, it can be really hard to even know where to start. 😔 I can hear that you're carrying a lot right now. Sometimes when we're overwhelmed, our minds convince us that everything is equally urgent and important. Let's take a breath together for a moment. If you had to pick just one thing that's weighing on you most heavily, what would that be?",
-      guilt: "Guilt and shame can be some of the heaviest feelings we carry. 💔 It sounds like you're really struggling with something that happened. I want you to know that making mistakes is part of being human - it doesn't make you a terrible person. Sometimes guilt can actually show us our values and what matters to us. What's weighing on your heart? Would it help to talk about what happened?",
-      fear: "Fear can feel so overwhelming and consuming. 😰 When we're scared, our whole body and mind can get caught up in that terror. I want you to know that you're safe here with me right now. Sometimes naming our fears can help take away some of their power. What's feeling most frightening to you? Are these fears about something specific, or more of a general sense of dread?",
-      mixed: "Having mixed or conflicted feelings can be so confusing and exhausting. 🌊 It's like being pulled in different directions emotionally, and that can feel really overwhelming. But you know what? Having complex feelings often means you're processing something important and multifaceted. It's actually a sign of emotional depth. What are some of the different feelings you're experiencing? Sometimes sorting through them one by one can help.",
-      general: "Thank you for sharing with me. 💙 I can hear that something is important to you, and I want to make sure I'm really understanding what you're experiencing. Sometimes just having someone truly listen can make a difference. What would feel most helpful for you right now? Would you like to explore these feelings more, or is there something specific you're hoping to work through?"
-    };
-  }
+  // Removed hardcoded therapeutic prompts - all responses now come from Groq API
 
   private detectEmotionAndContext(message: string): { emotion: string; context: string } {
     const lowerMessage = message.toLowerCase();
@@ -667,23 +651,83 @@ Remember: Match your response style to what the person actually needs - informat
       const { emotion, context } = this.detectEmotionAndContext(userMessage);
       const crisisLevel = this.assessCrisisLevel(userMessage);
 
-      // Handle crisis situations immediately
+      // Handle crisis situations - use Groq API if available, otherwise use hardcoded crisis response
       if (crisisLevel === 'critical' || crisisLevel === 'high') {
         // Re-evaluate authenticity for crisis response
         const crisisAuthenticity = this.getCrisisAuthenticity(userMessage);
-        const crisisResponse = this.getCrisisResponse(crisisLevel, crisisAuthenticity, language);
-        return {
-          message: crisisResponse,
-          emotion: 'concerned',
-          therapeuticTechnique: 'crisis_intervention',
-          crisisLevel,
-          followUpSuggestions: [
-            'Contact a crisis helpline immediately',
-            'Reach out to a trusted friend or family member',
-            'Go to your nearest emergency room',
-            'Call emergency services if in immediate danger'
-          ]
-        };
+        
+        // Use Groq API for crisis response if available
+        if (this.groq) {
+          try {
+            console.log('🚨 Generating CRISIS response with Groq API...');
+            const crisisSystemPrompt = `You are a crisis intervention specialist. The user is experiencing ${crisisLevel} level crisis. Provide immediate, supportive crisis intervention while directing them to professional help. Include specific crisis resources and safety planning. Be compassionate but urgent about getting professional help.`;
+            
+            const messages = [
+              { role: 'system' as const, content: crisisSystemPrompt },
+              ...conversationHistory.slice(-2).map(msg => ({
+                role: msg.role as 'user' | 'assistant',
+                content: msg.content
+              })),
+              { role: 'user' as const, content: `[CRISIS LEVEL: ${crisisLevel}] ${userMessage}` }
+            ];
+
+            const completion = await this.groq.chat.completions.create({
+              messages,
+              model: this.model,
+              max_tokens: 800,
+              temperature: 0.3, // Lower temperature for crisis responses
+              stream: false
+            });
+
+            const response = completion.choices[0]?.message?.content || this.getCrisisResponse(crisisLevel, crisisAuthenticity, language);
+            
+            console.log('✅ Crisis AI response received!');
+            
+            return {
+              message: response,
+              emotion: 'concerned',
+              therapeuticTechnique: 'crisis_intervention',
+              crisisLevel,
+              followUpSuggestions: [
+                'Contact a crisis helpline immediately',
+                'Reach out to a trusted friend or family member',
+                'Go to your nearest emergency room',
+                'Call emergency services if in immediate danger'
+              ]
+            };
+          } catch (error) {
+            console.error('❌ Crisis AI response failed, using hardcoded fallback:', error);
+            // Fall back to hardcoded crisis response only if API fails
+            const crisisResponse = this.getCrisisResponse(crisisLevel, crisisAuthenticity, language);
+            return {
+              message: crisisResponse,
+              emotion: 'concerned',
+              therapeuticTechnique: 'crisis_intervention',
+              crisisLevel,
+              followUpSuggestions: [
+                'Contact a crisis helpline immediately',
+                'Reach out to a trusted friend or family member',
+                'Go to your nearest emergency room',
+                'Call emergency services if in immediate danger'
+              ]
+            };
+          }
+        } else {
+          // Use hardcoded crisis response only when Groq is not available
+          const crisisResponse = this.getCrisisResponse(crisisLevel, crisisAuthenticity, language);
+          return {
+            message: crisisResponse,
+            emotion: 'concerned',
+            therapeuticTechnique: 'crisis_intervention',
+            crisisLevel,
+            followUpSuggestions: [
+              'Contact a crisis helpline immediately',
+              'Reach out to a trusted friend or family member',
+              'Go to your nearest emergency room',
+              'Call emergency services if in immediate danger'
+            ]
+          };
+        }
       }
 
       // Use Groq API if available, otherwise use fallback
@@ -735,17 +779,28 @@ Remember: Match your response style to what the person actually needs - informat
         stream: false
       });
 
-      const response = completion.choices[0]?.message?.content || this.getFallbackMessage(emotion, language);
+      const aiResponse = completion.choices[0]?.message?.content;
       
-      console.log('✅ Real AI response received!', response.substring(0, 100) + '...');
-
-      return {
-        message: response,
-        emotion: this.mapEmotionToTherapistEmotion(emotion),
-        therapeuticTechnique: this.getTherapeuticTechnique(emotion, context),
-        crisisLevel,
-        followUpSuggestions: this.getFollowUpSuggestions(emotion, context)
-      };
+      if (aiResponse) {
+        console.log('✅ 100% GROQ AI response received! Length:', aiResponse.length, 'Preview:', aiResponse.substring(0, 100) + '...');
+        
+        return {
+          message: aiResponse,
+          emotion: this.mapEmotionToTherapistEmotion(emotion),
+          therapeuticTechnique: this.getTherapeuticTechnique(emotion, context),
+          crisisLevel,
+          followUpSuggestions: this.getFollowUpSuggestions(emotion, context)
+        };
+      } else {
+        console.warn('⚠️ Groq API returned empty response, using minimal fallback');
+        return {
+          message: this.getFallbackMessage(emotion, language),
+          emotion: this.mapEmotionToTherapistEmotion(emotion),
+          therapeuticTechnique: this.getTherapeuticTechnique(emotion, context),
+          crisisLevel,
+          followUpSuggestions: this.getFollowUpSuggestions(emotion, context)
+        };
+      }
     } catch (error) {
       console.error('❌ Groq API failed:', error);
       console.log('🔄 Falling back to pattern responses...');
@@ -760,9 +815,8 @@ Remember: Match your response style to what the person actually needs - informat
     crisisLevel: 'low' | 'medium' | 'high' | 'critical',
     language: SupportedLanguage = 'en'
   ): TherapistResponse {
-    const prompts = this.getTherapeuticPrompts();
-    const fallbackMessage = prompts[emotion as keyof typeof prompts] || prompts.general;
-    const message = this.getFallbackMessage(emotion, language) || fallbackMessage;
+    // Only use simple fallback when Groq API is completely unavailable
+    const message = this.getFallbackMessage(emotion, language);
 
     return {
       message,
@@ -971,22 +1025,17 @@ What's one small step you could take right now to increase your safety?`;
   }
 
   private getFallbackMessage(emotion: string, language: SupportedLanguage = 'en'): string {
-    // Try to get translated therapeutic response first
+    // Only used when Groq API is completely unavailable - keep very simple
+    console.log('⚠️ Using basic fallback message - Groq API not available');
+    
+    // Try to get translated response first
     const translatedResponse = getTranslation(language, `therapeuticResponses.${emotion}`);
     if (translatedResponse !== `therapeuticResponses.${emotion}`) {
       return translatedResponse;
     }
     
-    // Fallback to English
-    const messages: Record<string, string> = {
-      anxiety: "I understand you're feeling anxious. That can be really overwhelming. Let's work through this together. What's helping you feel most grounded right now?",
-      depression: "I hear the pain in what you're sharing. Depression can make everything feel so much harder. You're brave for reaching out. What's one small thing that might bring you a moment of comfort?",
-      anger: "It sounds like you're feeling really angry about something. Anger often tells us that something important is being threatened. What do you think is underneath this feeling?",
-      grief: "Grief is one of the most difficult experiences we can go through. There's no timeline for healing. How are you caring for yourself during this time?",
-      stress: "It sounds like you're under a lot of pressure right now. Stress can feel overwhelming when it builds up. What feels most urgent to address?",
-      general: "Thank you for sharing this with me. It takes courage to open up about difficult feelings. What would feel most helpful for you right now?"
-    };
-    return messages[emotion] || messages.general;
+    // Simple fallback message that encourages sharing without being overly therapeutic
+    return `I hear you and I'm here to listen. I understand you're dealing with something related to ${emotion}. Could you tell me more about what's on your mind right now? I'd like to understand your situation better so I can support you.`;
   }
 
   // Method to check if Groq API is configured

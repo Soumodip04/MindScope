@@ -142,7 +142,7 @@ export default function EmotionAnalysisPage() {
                     <div>
                       <div className="flex justify-between text-sm mb-1">
                         <span className="text-gray-400">Detection Accuracy</span>
-                        <span className="text-green-300">98.7%</span>
+                        <span className="text-green-300">92.3%</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
                         <div className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full w-[98%]"></div>

@@ -71,6 +71,7 @@ English • Spanish • French • German • Chinese • Japanese • Korean �
 | [**TESTING_GUIDE.md**](./TESTING_GUIDE.md) | Comprehensive testing procedures |
 | [**SAFETY-SYSTEMS-README.md**](./SAFETY-SYSTEMS-README.md) | Crisis intervention and safety protocols |
 | [**MULTILINGUAL-SUPPORT-README.md**](./MULTILINGUAL-SUPPORT-README.md) | Language and cultural features |
+| [**AI_THERAPIST_VOICE_SECURITY.md**](./docs/AI_THERAPIST_VOICE_SECURITY.md) | AI therapist architecture, voice, security & backend design |
 
 ## 🛠️ **Tech Stack**
 
