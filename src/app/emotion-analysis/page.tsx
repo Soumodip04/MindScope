@@ -218,7 +218,7 @@ export default function EmotionAnalysisPage() {
                       <span className="text-2xl">💡</span>
                       <span className="text-purple-200 font-semibold">Optimal Lighting</span>
                     </div>
-                    <p className="text-gray-300 text-sm">Position yourself facing natural light or use soft, even artificial lighting for 99% accuracy</p>
+                    <p className="text-gray-300 text-sm">Position yourself facing natural light or use soft, even artificial lighting for higher accuracy</p>
                   </div>
                   
                   <div className="p-4 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-xl border border-blue-400/30">
